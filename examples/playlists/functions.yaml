@@ -1,0 +1,41 @@
+---
+app: Playlists
+
+settings:
+  auth: session
+  root: http://localhost:8000
+  login: /accounts/login
+  username_field: username
+  password_field: password
+  csrf_cookie: csrftoken
+  csrf_form: csrfmiddlewaretoken
+  csrf_header: X-CSRFToken
+
+users:
+  -
+    username: john
+    password: pass
+    vars: {playlist_id: 1}
+  -
+    username: paul
+    password: pass
+    vars: {}
+
+urls:
+  public:
+    -
+      path: /
+      methods: [get]
+    -
+      path: /accounts/login/
+      methods: [get]
+
+  authentication:
+    -
+      path: /playlist/
+      methods: [get, post]
+
+  authorization:
+    -
+      path: /playlist/{playlist_id}/
+      methods: [put, delete]
