@@ -18,12 +18,12 @@ configurations and expected outcome for every possible test-case.
 
 ## How it works
 It accepts as input a concise configuration file in yaml with an application's users, urls and authentication settings.
-It acts as every user listed in the configuration and attempts to access every url with all defined http methods and
-prints the actual and expected result.
+It acts on behalf of every user listed in the configuration and attempts to access every url with all defined http
+methods, and prints the actual and expected result.
 
 ## Example
-There is an app called "Playlists" and allows users to manage and share their music playlists with other users. To 
-create a playlist or view someone else's playlist, a user must be authenticated. But, only the person who created a
+Assuming there is an app called "Playlists" and allows users to manage and share their music playlists with other users.
+To create a playlist or view someone else's playlist, a user must be authenticated. But, only the person who created a
 playlist can edit or delete it.
 
 Based on the requirements above we can design the following endpoints:
@@ -42,9 +42,9 @@ Based on the requirements above we can design the following endpoints:
 
 The "{name}" placeholder in group #3 is automatically replaced with the right value for every user, based on their vars
 dictionary. Any number of placeholders can be used in a url path as long as they are unique. When enumerating users, a
-url is considered "unlocked" and thus added to the queue, if user vars include all keys defined in it.
+url is considered "unlocked" and thus added to the queue, if a user's vars include all keys defined in it.
 
-Suppose we define two users: John and Paul. John created playlist called 'pauls-favorites' with id = 1. The
+Suppose we define two users: John and Paul. John created playlist called 'johns-favorites' with id = 1. The
 configuration can look like this:
 
 ```yaml
@@ -91,39 +91,38 @@ urls:
       methods: [put, delete]
 ```
 
-Output:
+The complete example can be found under examples/ and it's a django app with some checks removed on purpose. Here is the
+output of that:
 
 ```
 /
  GET
-     Allow anonymous <span style="color:green">(200) => OK</span>
+     Allow anonymous (200) => OK
 
 /accounts/login/
  GET
-     Allow anonymous <span style="color:green">(200) => OK</span>
+     Allow anonymous (200) => OK
 
 /playlist/
  GET
-     Deny anonymous <span style="color:green">(302) => OK</span>
-     Allow john <span style="color:green">(200) => OK</span>
-     Allow paul <span style="color:green">(200) => OK</span>
+     Deny anonymous (302) => OK
+     Allow john (200) => OK
+     Allow paul (200) => OK
  POST
-     Deny anonymous <span style="color:green">(403) => OK</span>
-     Allow john <span style="color:green">(200) => OK</span>
-     Allow paul <span style="color:green">(200) => OK</span>
+     Deny anonymous (403) => OK
+     Allow john (200) => OK
+     Allow paul (200) => OK
 
 /playlist/1/
  DELETE
-     Allow john <span style="color:green">(200) => OK</span>
-     Deny paul <span style="color:green">(403) => OK</span>
+     Allow john (200) => OK
+     Deny paul (403) => OK
  PUT
-     Allow john <span style="color:green">(200) => OK</span>
-     Deny paul <span style="color:red">(200) => FAILED</span>
+     Allow john (200) => OK
+     Deny paul (200) => FAILED
 
-<span style="color:red">One or more functions have produced unexpected results...</span>
+One or more functions have produced unexpected results...
 ```
-
-The complete example can be found under examples/ and it's a django app with some checks removed on purpose.
 
 ## Usage
 ```bash
