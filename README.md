@@ -124,6 +124,8 @@ output of that:
 One or more functions have produced unexpected results...
 ```
 
+**Always use with a test database to avoid losing any data, as these requests are actually sent to your app.**
+
 ## Usage
 ```bash
 usage: fnval [-h] [-i INPUT]
