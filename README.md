@@ -40,7 +40,7 @@ Based on the requirements above we can design the following endpoints:
         * PUT /playlist/{playlist_id} to edit a playlist if it belongs to them
         * DELETE /playlist/{playlist_id} to delete a playlist if it belongs to them
 
-The "{name}" placeholder in group #3 is automatically replaced with the right value for every user, based on their vars
+The "{playlist_id}" placeholder in group #3 is automatically replaced with the right value for every user, based on their vars
 dictionary. Any number of placeholders can be used in a url path as long as they are unique. When enumerating users, a
 url is considered "unlocked" and thus added to the queue, if a user's vars include all keys defined in it.
 
