@@ -11,8 +11,8 @@ def sort_results(results):
 
 
 def format_result(result):
-    return Style.RESET_ALL + result.message + (
-        Fore.RED + ' ({0}) => FAILED'.format(result.status_code) if result.is_error else
+    return Style.RESET_ALL + result.test + (
+        Fore.RED + ' ({0}) => FAILED, {1}'.format(result.status_code, result.fault) if result.is_error else
         Fore.GREEN + ' ({0}) => OK'.format(result.status_code)
     ) + Style.RESET_ALL
 
@@ -42,13 +42,17 @@ def display(results):
 
 
 class Result:
-    def __init__(self, url, method, message):
+    def __init__(self, url, method, test):
         self.url = url
         self.method = method
-        self.message = message
+        self.test = test
         self.is_error = None
         self.response = None
 
     @property
     def status_code(self):
         return self.response.status_code
+
+    @property
+    def fault(self):
+        return self.response.content[0:100] if self.response.content else 'Empty body'

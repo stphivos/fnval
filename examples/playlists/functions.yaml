@@ -34,6 +34,8 @@ urls:
     -
       path: /playlist/
       methods: [get, post]
+      payload:
+        post: {name: string}
 
   authorization:
     -
