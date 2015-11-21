@@ -84,13 +84,17 @@ urls:
     -
       path: /playlist/
       methods: [get, post]
+      headers:
+        post: {Content-type: application/json, Accept: text/plain}
       payload:
         post: {name: string}
-        
+
   authorization:
     -
       path: /playlist/$playlist_id/
       methods: [put, delete]
+      payload:
+        put: {name: $playlist_name}
 ```
 
 The complete example can be found under examples/ and it's a django app with some checks removed on purpose. Here is the
