@@ -65,7 +65,7 @@ users:
   -
     username: john
     password: pass
-    vars: {playlist_id: 1}
+    vars: {playlist_id: 1, playlist_name: johns-favorites}
   -
     username: paul
     password: pass
