@@ -30,21 +30,24 @@ def get_urls(config):
     for u in config['urls']['public']:
         public_urls.append(Url(
             u['path'],
-            u['methods']
+            u['methods'],
+            u.get('payload', None)
         ))
 
     authentication_urls = []
     for u in config['urls']['authentication']:
         authentication_urls.append(Url(
             u['path'],
-            u['methods']
+            u['methods'],
+            u.get('payload', None)
         ))
 
     authorization_urls = []
     for u in config['urls']['authorization']:
         authorization_urls.append(Url(
             u['path'],
-            u['methods']
+            u['methods'],
+            u.get('payload', None)
         ))
 
     return public_urls, authentication_urls, authorization_urls

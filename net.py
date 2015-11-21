@@ -89,7 +89,7 @@ class Session(object):
 
         return func, headers
 
-    def request(self, url, method, user=None):
+    def request(self, url, method, user=None, payload=None):
         """
         Make the request to target url and enforce a 2xx status code was received.
         """
@@ -100,7 +100,7 @@ class Session(object):
         if not func:
             raise Exception('Request method {0} is invalid.'.format(method))
 
-        res = func(self.root_url + url, headers=headers, allow_redirects=False)
+        res = func(self.root_url + url, headers=headers, allow_redirects=False, data=payload)
         if res.status_code >= 300:
             raise HTTPError('%s Error: %s for %s %s' % (res.status_code, res.reason, method, res.url), response=res)
 

@@ -5,6 +5,8 @@ from django.http import HttpResponse, Http404
 from django.utils.decorators import method_decorator
 from django.views.generic import View
 
+from gui.models import Playlist
+
 
 class AuthenticationMixin(object):
     @method_decorator(login_required)
@@ -12,12 +14,12 @@ class AuthenticationMixin(object):
         return super(AuthenticationMixin, self).dispatch(request, *args, **kwargs)
 
 
-class Home(View):
+class HomeView(View):
     def get(self, request, *args, **kwargs):
         return HttpResponse('Welcome to playlists!')
 
 
-class Login(View):
+class LoginView(View):
     def get(self, request, *args, **kwargs):
         return render(request, 'login.html')
 
@@ -33,16 +35,21 @@ class Login(View):
             raise Http404
 
 
-class Profile(AuthenticationMixin, View):
+class ProfileView(AuthenticationMixin, View):
     def get(self, request, *args, **kwargs):
         return HttpResponse('User profile')
 
 
-class Playlist(AuthenticationMixin, View):
+class PlaylistView(AuthenticationMixin, View):
     def get(self, request, *args, **kwargs):
         return HttpResponse('User playlist')
 
     def post(self, request, *args, **kwargs):
+        p = Playlist(
+            name=request.POST['name'],
+            user=request.user
+        )
+        p.save()
         return HttpResponse('Playlist created')
 
     def put(self, request, *args, **kwargs):

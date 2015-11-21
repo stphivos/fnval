@@ -3,9 +3,10 @@ from output import Result
 
 
 class Url:
-    def __init__(self, path, methods):
+    def __init__(self, path, methods, payload=None):
         self.path = path
         self.methods = methods
+        self.payload = payload if payload else {}
 
 
 class User:
@@ -63,7 +64,12 @@ class App:
             result = Result(url.path, method.upper(), test_name)
 
             try:
-                result.response = self.session.request(url.path, method=method, user=user)
+                result.response = self.session.request(
+                    url.path,
+                    method=method,
+                    user=user,
+                    payload=url.payload.get(method, None)
+                )
                 result.is_error = should_fail
             except HTTPError as ex:
                 result.response = ex.response
