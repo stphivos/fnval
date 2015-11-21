@@ -1,11 +1,13 @@
+from copy import deepcopy
 from requests import HTTPError
 from output import Result
 
 
 class Url:
-    def __init__(self, path, methods, payload=None):
+    def __init__(self, path, methods, headers=None, payload=None):
         self.path = path
         self.methods = methods
+        self.headers = headers if headers else {}
         self.payload = payload if payload else {}
 
 
@@ -29,6 +31,21 @@ class App:
         self.user_urls = []
         self.results = []
 
+    def replace_vars(self, user, source):
+        """
+        Replaces source string variables from user vars dictionary
+        """
+        user_value = source
+        for key, value in user.vars.items():
+            user_value = user_value.replace('$' + key, str(value))
+        return user_value
+
+    def missing_vars(self, source):
+        """
+        Determines if a source string contains variables that were not replaced
+        """
+        return '$' in source
+
     def get_urls_of(self, user):
         """
         Generate list of user-specific urls by replacing template vars with user vars.
@@ -39,16 +56,34 @@ class App:
         urls = []
 
         for url in self.user_urls:
-            user_path = url.path
+            for method in url.methods:
+                locked = False
 
-            for key, value in user.vars.items():
-                user_path = user_path.replace('{' + key + '}', str(value))
+                user_path = self.replace_vars(user, url.path)
+                if self.missing_vars(user_path):
+                    locked = True
 
-            # if key not in user vars url is locked for user -> skip
-            if '{' in user_path or '}' in user_path:
-                continue
+                user_payload = {}
 
-            urls.append(Url(user_path, url.methods))
+                if not locked:
+                    for key, value in url.payload.get(method, {}).items():
+                        user_value = self.replace_vars(user, value)
+                        if self.missing_vars(user_value):
+                            locked = True
+                            continue
+                        else:
+                            user_payload[key] = user_value
+
+                # if any key in url path or payload not in user vars url is locked for user -> skip
+                if locked:
+                    continue
+
+                user_url = deepcopy(url)
+                user_url.path = user_path
+                user_url.methods = [method]
+                user_url.payload = {method: user_payload}
+
+                urls.append(user_url)
 
         return urls
 
@@ -68,6 +103,7 @@ class App:
                     url.path,
                     method=method,
                     user=user,
+                    headers=url.headers.get(method, None),
                     payload=url.payload.get(method, None)
                 )
                 result.is_error = should_fail
