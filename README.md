@@ -37,10 +37,10 @@ Based on the requirements above we can design the following endpoints:
         * POST /playlist to create a playlist
     
     3. Authorized users can request:
-        * PUT /playlist/{playlist_id} to edit a playlist if it belongs to them
-        * DELETE /playlist/{playlist_id} to delete a playlist if it belongs to them
+        * PUT /playlist/$playlist_id to edit a playlist if it belongs to them
+        * DELETE /playlist/$playlist_id to delete a playlist if it belongs to them
 
-The "{playlist_id}" placeholder in group #3 is automatically replaced with the right value for every user, based on their vars
+The "$playlist_id" placeholder in #3 is automatically replaced with the right value for every user, based on their vars
 dictionary. Any number of placeholders can be used in a url path. When enumerating users, a
 url is considered "unlocked" and thus added to the queue, if a user's vars include all keys defined in it.
 
@@ -89,7 +89,7 @@ urls:
         
   authorization:
     -
-      path: /playlist/{playlist_id}/
+      path: /playlist/$playlist_id/
       methods: [put, delete]
 ```
 

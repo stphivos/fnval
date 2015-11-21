@@ -31,6 +31,7 @@ def get_urls(config):
         public_urls.append(Url(
             u['path'],
             u['methods'],
+            u.get('headers', None),
             u.get('payload', None)
         ))
 
@@ -39,6 +40,7 @@ def get_urls(config):
         authentication_urls.append(Url(
             u['path'],
             u['methods'],
+            u.get('headers', None),
             u.get('payload', None)
         ))
 
@@ -47,6 +49,7 @@ def get_urls(config):
         authorization_urls.append(Url(
             u['path'],
             u['methods'],
+            u.get('headers', None),
             u.get('payload', None)
         ))
 

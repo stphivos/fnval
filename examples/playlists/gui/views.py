@@ -1,10 +1,10 @@
+import json
 from django.contrib.auth import authenticate, login as auth_login
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
-from django.http import HttpResponse, Http404
+from django.http import HttpResponse, Http404, QueryDict
 from django.utils.decorators import method_decorator
 from django.views.generic import View
-
 from gui.models import Playlist
 
 
@@ -45,8 +45,9 @@ class PlaylistView(AuthenticationMixin, View):
         return HttpResponse('User playlist')
 
     def post(self, request, *args, **kwargs):
+        data = json.loads(request.body)
         p = Playlist(
-            name=request.POST['name'],
+            name=data['name'],
             user=request.user
         )
         p.save()
@@ -56,6 +57,10 @@ class PlaylistView(AuthenticationMixin, View):
         # skipping the following check will allow any authenticated user to edit other users' playlists
         # if int(kwargs['id']) not in [x.id for x in request.user.playlist_set.all()]:
         #     return HttpResponse('Users can only modify their own playlists.', status=403)
+        p = Playlist.objects.get(pk=kwargs['id'])
+        data = QueryDict(request.body)
+        p.name = data['name']
+        p.save()
         return HttpResponse('Playlist updated')
 
     def delete(self, request, *args, **kwargs):

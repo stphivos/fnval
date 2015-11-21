@@ -61,7 +61,7 @@ class Session(object):
         Create a new session based on configured auth type and specified user credentials.
         """
         session = requests.session()
-        headers = None
+        headers = {}
 
         if user:
             if self.auth_type == AuthType.session:
@@ -89,18 +89,26 @@ class Session(object):
 
         return func, headers
 
-    def request(self, url, method, user=None, payload=None):
+    def request(self, url, method, user=None, headers=None, payload=None):
         """
         Make the request to target url and enforce a 2xx status code was received.
         """
         if user and not self.auth_type:
             raise Exception('Auth type {0} is invalid.'.format(self._auth))
 
-        func, headers = self.get_function(method, user)
+        func, auth_headers = self.get_function(method, user)
         if not func:
             raise Exception('Request method {0} is invalid.'.format(method))
 
-        res = func(self.root_url + url, headers=headers, allow_redirects=False, data=payload)
+        is_json = headers and 'Content-type' in headers and 'json' in headers['Content-type']
+        res = func(
+            self.root_url + url,
+            headers=dict(auth_headers, **headers) if headers else auth_headers,
+            allow_redirects=False,
+            data=payload if not is_json else None,
+            json=payload if is_json else None
+        )
+
         if res.status_code >= 300:
             raise HTTPError('%s Error: %s for %s %s' % (res.status_code, res.reason, method, res.url), response=res)
 
