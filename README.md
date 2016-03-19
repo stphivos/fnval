@@ -131,6 +131,12 @@ One or more functions have produced unexpected results...
 
 **Always use with a test database to avoid losing any data, as these requests are actually sent to your app.**
 
+## Installation
+To install from Python Package Index (PyPI):
+```bash
+pip install -U fnval
+```
+
 ## Usage
 ```bash
 usage: fnval [-h] [-i INPUT]
