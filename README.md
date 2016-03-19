@@ -11,7 +11,7 @@ they forget.
 > -- <cite>[OWASP’s Top 10](https://www.owasp.org/index.php/Top_10_2013-A7-Missing_Function_Level_Access_Control)</cite>
 
 A determined malicious person can patiently study a web application to discover exposed endpoints, understand how
-they are used and feed data to them to identify missing controls on the server-side. Sadly, not everyone stops there.
+they are used and feed data to them to identify missing controls on the server-side.
 
 Automated vulnerability scanners usually do very poorly in these checks because they require extensive manually defined
 configurations and expected outcome for every possible test-case.
@@ -41,8 +41,7 @@ Based on the requirements above we can design the following endpoints:
         * DELETE /playlist/$playlist_id to delete a playlist if it belongs to them
 
 The "$playlist_id" placeholder in #3 is automatically replaced with the right value for every user, based on their vars
-dictionary. Any number of placeholders can be used in a url path. When enumerating users, a
-url is considered "unlocked" and thus added to the queue, if a user's vars include all keys defined in it.
+dictionary. Any number of placeholders can be used in a url path. When enumerating users, if a user's vars include all keys defined in the current url, it is added to the queue - otherwise skipped.
 
 Suppose we define two users: John and Paul. John created playlist called 'johns-favorites' with id = 1. The
 configuration can look like this:
