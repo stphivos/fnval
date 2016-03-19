@@ -41,7 +41,7 @@ Based on the requirements above we can design the following endpoints:
         * DELETE /playlist/$playlist_id to delete a playlist if it belongs to them
 
 The "$playlist_id" placeholder in #3 is automatically replaced with the right value for every user, based on their vars
-dictionary. Any number of placeholders can be used in a url path. When enumerating users, if a user's vars include all keys defined in the current url, it is added to the queue - otherwise skipped.
+dictionary. Any number of placeholders can be used in a url path. When enumerating users, if a user's vars include all keys defined in the current url, it is added to the queue - otherwise it's skipped.
 
 Suppose we define two users: John and Paul. John created playlist called 'johns-favorites' with id = 1. The
 configuration can look like this:
