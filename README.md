@@ -1,8 +1,6 @@
 # fnval
 A missing function level access control checker.
 
-**This repo is in a quite early stage, so use with caution!**
-
 ## What is it trying to solve
 > Applications do not always protect application functions properly. Sometimes, function level protection is managed
 via configuration, and the system is misconfigured. Sometimes, developers must include the proper code checks, and
